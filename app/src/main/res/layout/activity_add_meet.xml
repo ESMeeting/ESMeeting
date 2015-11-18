@@ -1,0 +1,291 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1"
+
+        tools:context="com.eastsoft.meeting.esmeeting.AddActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/s1"
+                style="@style/detail_style_20sp_535353"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:text="开始时间" />
+
+            <TextView
+                android:id="@+id/et_starttime"
+                style="@style/detail_style_20sp_535353"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/s1"
+
+                android:text="123" />
+
+            <View
+                android:layout_width="150dp"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/s1"
+
+                android:background="#535353"
+
+                />
+
+            <TextView
+                android:id="@+id/s2"
+                style="@style/detail_style_20sp_535353"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="350dp"
+                android:text="结束时间" />
+
+            <TextView
+                android:id="@+id/et_endtime"
+                style="@style/detail_style_20sp_535353"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+
+                android:layout_toRightOf="@id/s2"
+
+                android:text="1233" />
+
+            <View
+                android:layout_width="150dp"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="5dp"
+
+                android:layout_toRightOf="@id/s2"
+
+                android:background="#535353"
+
+                />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <!--<TextView-->
+            <!--android:id="@+id/textView5"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="24dp"-->
+            <!--android:layout_marginStart="24dp"-->
+            <!--android:text="会议名称"-->
+
+            <!--android:visibility="gone" />-->
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+                <EditText
+                    style="@style/detail_style_20sp_535353"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:hint="会议名称"
+
+                    android:textColor="#535353" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+
+                android:text="会议地址"
+                android:visibility="invisible" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/et_adress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="350dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+                <EditText
+                    style="@style/detail_style_20sp_535353"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:hint="会议地址"
+
+                    android:textColor="#535353" />
+            </android.support.design.widget.TextInputLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
+                android:text="参会人员"
+
+                android:visibility="invisible" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/et_participant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+                <EditText
+                    style="@style/detail_style_20sp_535353"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="参会人员"
+
+                    android:textColor="#535353" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!--<TextView-->
+            <!--android:id="@+id/textView4"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignTop="@+id/textView3"-->
+            <!--android:visibility="invisible"-->
+
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:text="部门" />-->
+            <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:id="@+id/et_department"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toRightOf="@id/textView4"-->
+            <!--android:focusable="true"-->
+            <!--android:focusableInTouchMode="true">-->
+
+            <!--<EditText-->
+            <!--android:layout_width="200dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:textColor="#535353"-->
+            <!--style="@style/detail_style_20sp_535353"-->
+
+            <!--android:hint=""-->
+            <!--/>-->
+            <!--</android.support.design.widget.TextInputLayout>-->
+        </RelativeLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/data_ly"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
+
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               />
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:background="@color/colorAccent"
+                android:text="取消" />
+
+
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_toRightOf="@id/cancel"
+                android:background="@color/colorAccent"
+                android:text="确定" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>

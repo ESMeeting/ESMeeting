@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/item_ly">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/num"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            style="@style/detail_style_20sp_535353"
+            android:text="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time"
+            android:layout_toRightOf="@id/num"
+            android:layout_marginLeft="10dp"
+            style="@style/detail_style_20sp_535353"
+            android:text="9:00-11:00"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:layout_toRightOf="@id/time"
+            android:layout_marginLeft="10dp"
+            android:text="会议名称"
+            style="@style/detail_style_20sp_535353"
+            />
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/adress"-->
+            <!--android:layout_toRightOf="@id/name"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:text="会议地址"-->
+            <!--style="@style/detail_style_20sp_535353"-->
+            <!--/>-->
+
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/people"
+            style="@style/detail_style_20sp_535353"
+            android:text="1"/>
+    </RelativeLayout>
+
+</LinearLayout>
