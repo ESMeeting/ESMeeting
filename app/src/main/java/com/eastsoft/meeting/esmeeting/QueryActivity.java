@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.CalendarView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,8 +70,8 @@ public class QueryActivity extends AppCompatActivity {
         Date date=new Date();
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         day=myFmt2.format(date);
-        tips= (TextView) findViewById(R.id.text_day);
-        tips.setText(day);
+        //tips= (TextView) findViewById(R.id.text_day);
+        //tips.setText(day);
         CalendarView calendarView= (CalendarView) findViewById(R.id.calendarView);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -81,7 +82,7 @@ public class QueryActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                tips.setText(day);
+                //tips.setText(day);
                 queryData(0, STATE_REFRESH,day);
 
             }
@@ -260,23 +261,26 @@ public class QueryActivity extends AppCompatActivity {
             if (convertView == null) {
 
                 convertView = LayoutInflater.from(context)
-                        .inflate(R.layout.list_item_bankcard, null);
+                        .inflate(R.layout.list_item_bankcard_two, null);
                 holder = new ViewHolder();
-                holder.num = (TextView) convertView .findViewById(R.id.num);
+                holder.image=(ImageView)convertView.findViewById(R.id.image);
                 holder.time = (TextView) convertView .findViewById(R.id.time);
                 holder.name = (TextView) convertView .findViewById(R.id.name);
                 holder.adress = (TextView) convertView .findViewById(R.id.adress);
                 holder.people = (TextView) convertView .findViewById(R.id.people);
+                holder.item_ly = convertView.findViewById(R.id.item_ly);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+
             MeetInfo meetInfo = (MeetInfo) getItem(position);
-            holder.num.setText(position+1+"");
+            holder.image.setImageResource(R.drawable.logo);
+            holder.item_ly.setBackgroundColor(QueryActivity.this.getResources().getColor(R.color.white));
             holder.time.setText(meetInfo.getStartTime().substring(9)+"--"+meetInfo.getEndTime().substring(9));
             holder.name.setText(meetInfo.getName());
 //            holder.adress.setText(meetInfo.getAddress());
-            holder.people.setText("    参会人员:"+meetInfo.getParticipant());
+            holder.people.setText(meetInfo.getParticipant());
             return convertView;
         }
         class ViewHolder {
@@ -285,6 +289,8 @@ public class QueryActivity extends AppCompatActivity {
             TextView adress;
             TextView name;
             TextView people;
+            View item_ly;
+            ImageView image;
         }
         @Override
         public int getCount() {

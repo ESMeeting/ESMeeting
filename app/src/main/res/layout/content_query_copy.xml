@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.eastsoft.meeting.esmeeting.MainActivity"
+    tools:showIn="@layout/activity_query">
+
+<RelativeLayout
+    android:layout_width="750px"
+    android:layout_height="750px"
+    android:layout_gravity="center">
+
+    <CalendarView
+        android:layout_width="600px"
+        android:layout_height="600px"
+        android:layout_centerInParent="true"
+        android:id="@+id/calendarView"
+        android:background="@drawable/date_background"
+        />
+
+</RelativeLayout>
+
+
+    <View
+        android:id="@+id/view_two"
+        android:layout_width="5px"
+        android:background="#d4d4d4"
+        android:layout_height="fill_parent"
+         />
+
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:background="#eeeeee"
+    android:layout_height="682px">
+    <TextView
+        android:id="@+id/text"
+        android:gravity="center|left"
+        android:layout_width="match_parent"
+        android:layout_height="55px"
+        android:text="会议记录"/>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:background="#ffffff"
+    android:layout_marginBottom="16px"
+    android:layout_marginRight="16px"
+    android:layout_below="@+id/text"
+    android:layout_height="match_parent">
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res/com.eastsoft.meeting.esmeeting"
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16px"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:smoothScrollbar="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
+
+
+
+</RelativeLayout>
+
+
+</LinearLayout>

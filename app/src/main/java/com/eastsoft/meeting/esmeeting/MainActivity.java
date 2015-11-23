@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int STATE_MORE = 1;// 加载更多
     private int limit = 30;        // 每页的数据是10条
     private int curPage = 0;        // 当前页的编号，从0开始
-    private TextView tips;
+    private TextView tips, textViewFour,textViewFive;
     private String adress;
     private Handler backHandler;
     private Runnable runnable;
@@ -71,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+      //  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+     //   setSupportActionBar(toolbar);
 
         Bmob.initialize(getApplicationContext(), APPID);
         initListView();
@@ -81,10 +83,13 @@ public class MainActivity extends AppCompatActivity {
         Date date = new Date();
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         day = myFmt2.format(date);
+        textViewFour=(TextView)this.findViewById(R.id.textView4);
+        textViewFive=(TextView)this.findViewById(R.id.textView5);
 
         textYear = (TextView) findViewById(R.id.textView);
         textWeek = (TextView) findViewById(R.id.textweek);
         initTime();
+        initRoonNum();
 
         handlerThread = new HandlerThread("back_thread");
         handlerThread.start();
@@ -97,10 +102,22 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-    }
 
+    }
+    private void initRoonNum(){
+        Intent intent=this.getIntent();
+        textViewFive.setText(intent.getStringExtra(Util.ADDRESS));
+        textViewFour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, QueryActivity.class);
+                      intent.putExtra(Util.ADDRESS, adress);
+                      startActivity(intent);
+            }
+        });
+    }
     private void initTime() {
-        textYear.setText(new SimpleDateFormat("yyyy年MM月dd日").format(new Date()));
+        textYear.setText(new SimpleDateFormat("yyyy/MM/dd").format(new Date()));
         textWeek.setText(new SimpleDateFormat("E").format(new Date()));
     }
 
@@ -111,30 +128,30 @@ public class MainActivity extends AppCompatActivity {
         backHandler.postDelayed(runnable, 5 * 1000);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+   // @Override
+   // public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+     //   getMenuInflater().inflate(R.menu.menu_main, menu);
+     //   return true;
+  //  }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+  //  @Override
+ //   public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    //    int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(MainActivity.this, QueryActivity.class);
-            intent.putExtra(Util.ADDRESS, adress);
-            startActivity(intent);
-            return true;
-        }
+    //    if (id == R.id.action_settings) {
+    ////        Intent intent = new Intent(MainActivity.this, QueryActivity.class);
+     //       intent.putExtra(Util.ADDRESS, adress);
+    //        startActivity(intent);
+    ////        return true;
+    //    }
 
-        return super.onOptionsItemSelected(item);
-    }
+    //    return super.onOptionsItemSelected(item);
+   // }
 
     private void initListView() {
         mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.list);
@@ -288,8 +305,9 @@ public class MainActivity extends AppCompatActivity {
             if (convertView == null) {
 
                 convertView = LayoutInflater.from(context)
-                        .inflate(R.layout.list_item_bankcard, null);
+                        .inflate(R.layout.list_item_bankcard_copy, null);
                 holder = new ViewHolder();
+                holder.image=(ImageView)convertView.findViewById(R.id.image);
                 holder.num = (TextView) convertView.findViewById(R.id.num);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
                 holder.name = (TextView) convertView.findViewById(R.id.name);
@@ -306,26 +324,39 @@ public class MainActivity extends AppCompatActivity {
 
             MeetInfo meetInfo = (MeetInfo) getItem(position);
             if (meetInfo.getStartTime().compareTo(currentTime) <= 0 && currentTime.compareTo(meetInfo.getEndTime()) <= 0) {
-                holder.item_ly.setBackgroundColor(MainActivity.this.getResources().getColor(R.color.colorAccent));
-            } else {
+                LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(100,100);
+                lp.setMargins(90,14,0,14);
+                holder.image.setLayoutParams(lp);
+                holder.image.setImageResource(R.drawable.first_logo);
+          // holder.item_ly.setBackgroundColor(MainActivity.this.getResources().getColor(R.color.colorAccent));
+          } else {
                 holder.item_ly.setBackgroundColor(MainActivity.this.getResources().getColor(R.color.white));
+                holder.image.setImageResource(R.drawable.second_logo);
+           }
+       //    holder.num.setText(position + 1 + "");
+       //     if (position>=0&&position<1){
 
-            }
-            holder.num.setText(position + 1 + "");
+
+          //  }else{
+         //       holder.image.setImageResource(R.drawable.second_logo);
+          //  }
             holder.time.setText(meetInfo.getStartTime().substring(9) + "--" + meetInfo.getEndTime().substring(9));
             holder.name.setText(meetInfo.getName());
 //            holder.adress.setText(meetInfo.getAddress());
-            holder.people.setText("    参会人员:" + meetInfo.getParticipant());
+          //  holder.people.setText("    参会人员:" + meetInfo.getParticipant());
+            holder.people.setText(meetInfo.getParticipant());
             return convertView;
         }
 
         class ViewHolder {
+            LinearLayout linearLayout;
             TextView num;
             TextView time;
             TextView adress;
             TextView name;
             TextView people;
             View item_ly;
+            ImageView image;
         }
 
         @Override
