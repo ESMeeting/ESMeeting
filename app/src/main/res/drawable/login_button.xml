@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+     <item android:state_pressed="true" >
+          <shape
+              android:shape="rectangle">
+               <!--设置填充颜色 -->
+               <solid android:color="@color/login_button_blue_press"/>
+               <!--设置弧形半径 -->
+               <corners android:radius="10dp"/>
+               <!--里面文字与Button边界的间隔 -->
+               <padding
+                   android:left="2dp"
+                   android:right="2dp"
+                   android:bottom="2dp"
+                   android:top="2dp"
+                   />
+          </shape>
+     </item>
+     <item android:state_pressed="false">
+          <shape
+              android:shape="rectangle">
+               <!--设置填充颜色 -->
+               <solid android:color="@color/login_button_blue_default"/>
+               <!--设置弧形半径 -->
+               <corners android:radius="10dp"/>
+               <!--里面文字与Button边界的间隔 -->
+               <padding
+                   android:left="2dp"
+                   android:right="2dp"
+                   android:bottom="2dp"
+                   android:top="2dp"
+                   />
+          </shape>
+     </item>
+</selector>

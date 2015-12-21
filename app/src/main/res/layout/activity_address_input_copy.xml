@@ -6,45 +6,46 @@
     android:gravity="center">
     <RelativeLayout
         android:id="@+id/Rel_one"
-        android:layout_width="638px"
-        android:layout_height="418px"
+        android:layout_width="738px"
+        android:layout_height="518px"
         android:background="#ffffff"
         >
         <RelativeLayout
-            android:layout_width="610px"
-            android:layout_height="368px"
+            android:layout_width="710px"
+            android:layout_height="468px"
             android:background="#9dc2e8"
             android:layout_above="@+id/textView2"
             android:layout_centerHorizontal="true">
             <ImageView
                 android:id="@+id/image"
-                android:layout_width="264px"
-                android:layout_height="60px"
+                android:layout_width="364px"
+                android:layout_height="80px"
+                android:layout_centerHorizontal="true"
                 android:background="@drawable/main_logo"
                 android:layout_marginTop="74px"
-                android:layout_marginLeft="190px"/>
+                />
             <EditText
                 android:id="@+id/editText"
                 android:layout_below="@+id/image"
                 android:layout_marginTop="32px"
-                android:layout_width="264px"
-                android:layout_height="44px"
+                android:layout_width="364px"
+                android:layout_height="70px"
                 android:textColorHint="#a7a7a8"
                 android:layout_alignLeft="@+id/image"
-                android:textSize="5pt"
+                android:textSize="8pt"
                 android:hint="请输入会议室号码"
                 android:background="@drawable/shape"/>
             <Button
                 android:id="@+id/ok"
                 android:layout_below="@+id/editText"
                 android:layout_alignLeft="@+id/editText"
-                android:layout_width="264px"
-                android:layout_height="44px"
+                android:layout_width="364px"
+                android:layout_height="70px"
                 android:layout_marginTop="32px"
                 android:text="确认"
-                android:textSize="5pt"
+                android:textSize="8pt"
                 android:textColor="#ffffff"
-                android:background="@drawable/shape_button"/>
+                android:background="@drawable/login_button"/>
 
         </RelativeLayout>
 

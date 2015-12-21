@@ -10,7 +10,6 @@ public class MeetInfo extends BmobObject {
     private String endTime;//会议结束时间
     private String name;//会议名称
     private String address;//会议地址
-    private String department;//会议部门
     private String participant;//参会人员
     private String day;//天
 
@@ -29,15 +28,6 @@ public class MeetInfo extends BmobObject {
     public void setAddress(String address) {
         this.address = address;
     }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
     public String getParticipant() {
         return participant;
     }

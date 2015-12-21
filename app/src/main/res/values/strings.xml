@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">东软载波智能会议室</string>
     <string name="action_settings">查询</string>
-
     <string name="pull_to_refresh_top_pull">下拉刷新</string>
     <string name="pull_to_refresh_top_release">释放刷新</string>
     <string name="pull_to_refresh_top_refreshing">加载中...</string>

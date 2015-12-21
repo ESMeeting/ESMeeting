@@ -11,52 +11,70 @@ android:id="@+id/item_ly">
     <ImageView
         android:layout_gravity="center"
         android:id="@+id/image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="30px"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="25px"
         />
 
     <RelativeLayout
         android:id="@+id/rel_one"
-        android:layout_margin="10dp"
+        android:layout_margin="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
+        <TextView
+            android:id="@+id/time_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_below="@+id/meeting_content"
+            android:text="会议时间:"/>
 
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/num"
             android:textSize="20dp"
+            android:layout_toRightOf="@+id/time_name"
+            android:layout_alignBottom="@+id/time_name"
             android:layout_marginLeft="1dp"
             android:text="9:00-11:00"/>
         <TextView
-            android:id="@+id/people_title"
+            android:id="@+id/meeting_people"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:layout_alignLeft="@+id/time"
             android:layout_below="@+id/time"
+            android:textSize="20dp"
             android:text="参会人员:"/>
         <TextView
             android:id="@+id/people"
-            android:text="全体人员"
+            android:text="生产以及软件开发部"
             android:layout_width="wrap_content"
             android:textSize="20dp"
+            android:layout_toRightOf="@+id/meeting_people"
+            android:layout_alignBottom="@+id/meeting_people"
             android:layout_height="wrap_content"
             android:layout_marginLeft="1dp"
-            android:layout_alignBottom="@+id/people_title"
-            android:layout_toRightOf="@+id/people_title"
+
+
             />
+        <TextView
+            android:id="@+id/meeting_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="会议名称:"
+            android:textSize="20dp"/>
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:layout_marginLeft="50px"
-            android:layout_toRightOf="@id/time"
-            android:text="例会"/>
+            android:text="青岛电视台来访"
+            android:layout_marginLeft="1dp"
+            android:layout_alignTop="@+id/meeting_content"
+            android:layout_toEndOf="@+id/meeting_content" />
+
+
 
     </RelativeLayout>
 

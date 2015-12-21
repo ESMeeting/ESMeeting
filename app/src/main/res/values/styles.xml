@@ -14,7 +14,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -34,5 +33,8 @@
     <style name="relative_background">
         <item name="android:background">#2894ff</item>
     </style>
-
+    <!--设置spinner的样式 -->
+    <style name="spinner_alpha">
+        <item name="android:background">@drawable/spinner_selector</item>
+    </style>
 </resources>

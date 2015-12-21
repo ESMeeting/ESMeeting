@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.CalendarView;
@@ -52,6 +54,7 @@ public class QueryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_query);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -277,7 +280,8 @@ public class QueryActivity extends AppCompatActivity {
             MeetInfo meetInfo = (MeetInfo) getItem(position);
             holder.image.setImageResource(R.drawable.logo);
             holder.item_ly.setBackgroundColor(QueryActivity.this.getResources().getColor(R.color.white));
-            holder.time.setText(meetInfo.getStartTime().substring(9)+"--"+meetInfo.getEndTime().substring(9));
+           // holder.time.setText(meetInfo.getStartTime().substring(9)+"--"+meetInfo.getEndTime().substring(9));
+            holder.time.setText(meetInfo.getStartTime() + "--" + meetInfo.getEndTime());
             holder.name.setText(meetInfo.getName());
 //            holder.adress.setText(meetInfo.getAddress());
             holder.people.setText(meetInfo.getParticipant());

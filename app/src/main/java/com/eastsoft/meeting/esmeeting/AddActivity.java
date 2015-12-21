@@ -71,6 +71,7 @@ public class AddActivity extends AppCompatActivity {
             isUpdata = false;
             Date date = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd HH:mm");
+           // SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
             startTime.setText(dateFormat.format(date));
             endTime.setText(dateFormat.format(date));
         }

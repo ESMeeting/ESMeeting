@@ -7,31 +7,36 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
-
+import java.util.TreeSet;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
@@ -43,16 +48,20 @@ public class MainActivity extends AppCompatActivity {
     private PullToRefreshListView mPullToRefreshView;
     private ILoadingLayout loadingLayout;
     private ListView listView;
+    final List roomInfos  =new ArrayList();
     private DeviceListAdapter adapter;
     private String day;
     private static final int STATE_REFRESH = 0;// 下拉刷新
     private static final int STATE_MORE = 1;// 加载更多
     private int limit = 30;        // 每页的数据是10条
     private int curPage = 0;        // 当前页的编号，从0开始
-    private TextView tips, textViewFour,textViewFive;
+    private TextView tips, textViewFive;
+    private Button textViewFour;
     private String adress;
     private Handler backHandler;
     private Runnable runnable;
+    private static Spinner spinner;
+    private BmobQuery<MeetInfo> bmobQuery;
     private Handler mainHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -72,25 +81,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-      //  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-     //   setSupportActionBar(toolbar);
+
+        //  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //   setSupportActionBar(toolbar);
 
         Bmob.initialize(getApplicationContext(), APPID);
         initListView();
         adress = getIntent().getStringExtra(Util.ADDRESS);
-        final SimpleDateFormat myFmt2 = new SimpleDateFormat("yy-MM-dd");
-        Date date = new Date();
-        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
-        day = myFmt2.format(date);
-        textViewFour=(TextView)this.findViewById(R.id.textView4);
-        textViewFive=(TextView)this.findViewById(R.id.textView5);
-
+        textViewFour = (Button) this.findViewById(R.id.textView4);
+        //textViewFive = (TextView) this.findViewById(R.id.textView5);
+        spinner = (Spinner) this.findViewById(R.id.spinner);
         textYear = (TextView) findViewById(R.id.textView);
         textWeek = (TextView) findViewById(R.id.textweek);
         initTime();
         initRoonNum();
-
+        initRoomInfo();
         handlerThread = new HandlerThread("back_thread");
         handlerThread.start();
         backHandler = new Handler(handlerThread.getLooper());
@@ -98,15 +105,105 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 mainHandler.sendEmptyMessage(1);
-                backHandler.postDelayed(this, 5 * 1000);
+                backHandler.postDelayed(this, 30 * 1000);
             }
         };
 
 
     }
+
+    private void initRoomInfo() {
+        bmobQuery = new BmobQuery<MeetInfo>();
+        bmobQuery.addQueryKeys("address");
+        //List<BmobQuery<MeetInfo>> list=new ArrayList<BmobQuery<MeetInfo>>();
+        //list.add(bmobQuery);
+        bmobQuery.findObjects(this, new FindListener<MeetInfo>() {
+            @Override
+            public void onSuccess(List<MeetInfo> list) {
+                String[] roomInfo = new String[list.size()];
+                for (int i = 0; i < list.size(); i++) {
+                    roomInfo[i] = list.get(i).getAddress();
+                }
+                Set<String> roomInfoSet = new TreeSet<String>();
+                for (String roomInfos : roomInfo) {
+                    roomInfoSet.add(roomInfos);
+                }
+                String[] roomInfoss=roomInfoSet.toArray(new String[0]);
+                for (int i=0;i<roomInfoss.length;i++){
+                    roomInfos.add(roomInfoss[i]);
+                }
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.room_info, roomInfos);
+                arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                spinner.setAdapter(arrayAdapter);
+                Intent intent = MainActivity.this.getIntent();
+                spinner.setSelection(arrayAdapter.getPosition(intent.getStringExtra(Util.ADDRESS)));
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                        refreshAddress();
+
+                        adress = (String) spinner.getSelectedItem();
+                        if (!roomInfos.contains(adress)){
+                            Toast.makeText(MainActivity.this,"该房间已经删除,请点击重新登陆或点击别的房间刷新",Toast.LENGTH_SHORT).show();
+                        }
+                        queryData(0, STATE_REFRESH, day, adress);
+
+
+
+
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Toast.makeText(MainActivity.this, "获取数据失败！", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void refreshAddress(){
+        bmobQuery = new BmobQuery<MeetInfo>();
+        bmobQuery.addQueryKeys("address");
+        bmobQuery.findObjects(this, new FindListener<MeetInfo>() {
+            @Override
+            public void onSuccess(List<MeetInfo> list) {
+                if (list.size()>0){
+                    roomInfos.clear();
+                }
+                String[] roomInfo = new String[list.size()];
+                for (int i = 0; i < list.size(); i++) {
+                    roomInfo[i] = list.get(i).getAddress();
+                }
+                Set<String> roomInfoSet = new TreeSet<String>();
+                for (String roomInfos : roomInfo) {
+                    roomInfoSet.add(roomInfos);
+                }
+                String[] roomInfoss=roomInfoSet.toArray(new String[0]);
+                for (int i=0;i<roomInfoss.length;i++){
+                    roomInfos.add(roomInfoss[i]);
+                }
+
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+        });
+    }
+
     private void initRoonNum(){
         Intent intent=this.getIntent();
-        textViewFive.setText(intent.getStringExtra(Util.ADDRESS));
+        //textViewFive.setText(intent.getStringExtra(Util.ADDRESS));
         textViewFour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,6 +214,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void initTime() {
+        final SimpleDateFormat myFmt2 = new SimpleDateFormat("yy-MM-dd");
+        Date date = new Date();
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+        day = myFmt2.format(date);
         textYear.setText(new SimpleDateFormat("yyyy/MM/dd").format(new Date()));
         textWeek.setText(new SimpleDateFormat("E").format(new Date()));
     }
@@ -125,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         queryData(0, STATE_REFRESH, day, adress);
-        backHandler.postDelayed(runnable, 5 * 1000);
+        backHandler.postDelayed(runnable, 60 * 1000);
     }
 
    // @Override
@@ -227,25 +328,24 @@ public class MainActivity extends AppCompatActivity {
      * @param page       页码
      * @param actionType ListView的操作类型（下拉刷新、上拉加载更多）
      */
-    private void queryData(final int page, final int actionType, String day, String adress) {
+    private void queryData(final int page, final int actionType, final String day, String adress) {
         Log.i("bmob", "pageN:" + page + " limit:" + limit + " actionType:" + actionType);
 
-        final SimpleDateFormat myFmt2 = new SimpleDateFormat("yy-MM-dd HH:mm");
+        final SimpleDateFormat myFmt2 = new SimpleDateFormat("HH:mm");
         Date date = new Date();
         final String currentTime = myFmt2.format(date);
-
+        final String[] meetingDay;
         BmobQuery<MeetInfo> query = new BmobQuery<MeetInfo>();
         BmobQuery<MeetInfo> query2 = new BmobQuery<MeetInfo>();
-        query.addWhereEqualTo("day", day);
+        BmobQuery<MeetInfo> query3 = new BmobQuery<MeetInfo>();
+        query.addWhereGreaterThanOrEqualTo("day", day);
         query2.addWhereEqualTo("address", adress);
-
         List<BmobQuery<MeetInfo>> querieList=new LinkedList<>();
         querieList.add(query);
         querieList.add(query2);
-        BmobQuery<MeetInfo> andQuery=new BmobQuery<>();
+       BmobQuery<MeetInfo> andQuery=new BmobQuery<>();
         andQuery.and(querieList);
-
-        andQuery.order("startTime");
+        //andQuery.order("startTime");
         andQuery.setLimit(limit);            // 设置每页多少条数据
 //        query.setSkip(page*limit);		// 从第几条数据开始，
         andQuery.findObjects(this, new FindListener<MeetInfo>() {
@@ -253,29 +353,70 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(List<MeetInfo> arg0) {
                 // TODO Auto-generated method stub
+                //如果查询到的数据不是同一天的，先按开会时间排序，再按开会时间排序。
+                //如果查询到的数据是同一天的，就按照开会时间排序。
                 meetInfoList.clear();
-                if (arg0.size() > 0) {
-                    if (actionType == STATE_REFRESH) {
-                        // 当是下拉刷新操作时，将当前页的编号重置为0，并把bankCards清空，重新添加
-                        curPage = 0;
-                    }
-                    // 将本次查询的数据添加到bankCards中
-                    for (MeetInfo td : arg0) {
-                        if (td.getEndTime().compareTo(currentTime) > 0) {
-
-                            meetInfoList.add(td);
+                Set<MeetInfo> set=new HashSet<MeetInfo>(arg0);
+                BmobQuery<MeetInfo> andQuery=new BmobQuery<>();
+                //set的值为1说明查询到的数据的日期是同一天
+                if (set.size()==1){
+                    andQuery.order("startTime");
+                    if (arg0.size() > 0) {
+                        if (actionType == STATE_REFRESH) {
+                            // 当是下拉刷新操作时，将当前页的编号重置为0，并把bankCards清空，重新添加
+                            curPage = 0;
                         }
-                    }
-                    // 这里在每次加载完数据后，将当前页码+1，这样在上拉刷新的onPullUpToRefresh方法中就不需要操作curPage了
-                    curPage++;
-//                    showToast("数据加载完成");
-                } else if (actionType == STATE_MORE) {
-                    showToast("没有更多数据了");
+                        // 将本次查询的数据添加到bankCards中
+                        for (MeetInfo td : arg0) {
 
-                } else if (actionType == STATE_REFRESH) {
-                    showToast("没有数据");
-                    adapter.notifyDataSetChanged();
+                            if (td.getEndTime().compareTo(currentTime) > 0) {
+
+                                meetInfoList.add(td);
+                            }
+                        }
+                        // 这里在每次加载完数据后，将当前页码+1，这样在上拉刷新的onPullUpToRefresh方法中就不需要操作curPage了
+                        curPage++;
+//                    showToast("数据加载完成");
+                    } else if (actionType == STATE_MORE) {
+                        showToast("没有更多数据了");
+
+                    } else if (actionType == STATE_REFRESH) {
+                        showToast("没有数据");
+                        adapter.notifyDataSetChanged();
+                    }
+                    //set的值大于1说明查询到的数据的日期不是同一天
+                }else if(set.size()>1){
+                    andQuery.order("day,startTime");
+                    if (arg0.size() > 0) {
+                        if (actionType == STATE_REFRESH) {
+                            // 当是下拉刷新操作时，将当前页的编号重置为0，并把bankCards清空，重新添加
+                            curPage = 0;
+                        }
+                        // 将本次查询的数据添加到bankCards中
+                        for (MeetInfo td : arg0) {
+                            if(td.getDay().compareTo(day)==0){
+                                if (td.getEndTime().compareTo(currentTime) > 0) {
+
+                                    meetInfoList.add(td);
+                                }
+                            }else if (td.getDay().compareTo(day)>0){
+                                meetInfoList.add(td);
+                            }
+
+                        }
+                        // 这里在每次加载完数据后，将当前页码+1，这样在上拉刷新的onPullUpToRefresh方法中就不需要操作curPage了
+                        curPage++;
+//                    showToast("数据加载完成");
+                    } else if (actionType == STATE_MORE) {
+                        showToast("没有更多数据了");
+
+                    } else if (actionType == STATE_REFRESH) {
+                        showToast("没有数据");
+                        adapter.notifyDataSetChanged();
+                    }
                 }
+
+
 
                 mPullToRefreshView.onRefreshComplete();
                 adapter.notifyDataSetChanged();
@@ -308,17 +449,17 @@ public class MainActivity extends AppCompatActivity {
                         .inflate(R.layout.list_item_bankcard_copy, null);
                 holder = new ViewHolder();
                 holder.image=(ImageView)convertView.findViewById(R.id.image);
-                holder.num = (TextView) convertView.findViewById(R.id.num);
+                holder.peopleTitle = (TextView) convertView.findViewById(R.id.people_title);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
                 holder.name = (TextView) convertView.findViewById(R.id.name);
-                holder.adress = (TextView) convertView.findViewById(R.id.adress);
+                holder.meetingName = (TextView) convertView.findViewById(R.id.meeting_name);
                 holder.people = (TextView) convertView.findViewById(R.id.people);
                 holder.item_ly = convertView.findViewById(R.id.item_ly);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            final SimpleDateFormat myFmt2 = new SimpleDateFormat("yy-MM-dd HH:mm");
+            final SimpleDateFormat myFmt2 = new SimpleDateFormat("HH:mm");
             Date date = new Date();
             final String currentTime = myFmt2.format(date);
 
@@ -328,6 +469,16 @@ public class MainActivity extends AppCompatActivity {
                 lp.setMargins(90,14,0,14);
                 holder.image.setLayoutParams(lp);
                 holder.image.setImageResource(R.drawable.first_logo);
+                holder.meetingName.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
+                //holder.time.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 31);
+                holder.name.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
+                holder.peopleTitle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
+                holder.people.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
+                holder.meetingName.setTextColor(MainActivity.this.getResources().getColor(R.color.blue));
+                holder.time.setTextColor(MainActivity.this.getResources().getColor(R.color.blue));
+                holder.name.setTextColor(MainActivity.this.getResources().getColor(R.color.blue));
+                holder.peopleTitle.setTextColor(MainActivity.this.getResources().getColor(R.color.blue));
+                holder.people.setTextColor(MainActivity.this.getResources().getColor(R.color.blue));
           // holder.item_ly.setBackgroundColor(MainActivity.this.getResources().getColor(R.color.colorAccent));
           } else {
                 holder.item_ly.setBackgroundColor(MainActivity.this.getResources().getColor(R.color.white));
@@ -340,7 +491,8 @@ public class MainActivity extends AppCompatActivity {
           //  }else{
          //       holder.image.setImageResource(R.drawable.second_logo);
           //  }
-            holder.time.setText(meetInfo.getStartTime().substring(9) + "--" + meetInfo.getEndTime().substring(9));
+
+            holder.time.setText(changeDateStyle(meetInfo)+meetInfo.getStartTime() + "--" + meetInfo.getEndTime());
             holder.name.setText(meetInfo.getName());
 //            holder.adress.setText(meetInfo.getAddress());
           //  holder.people.setText("    参会人员:" + meetInfo.getParticipant());
@@ -348,17 +500,27 @@ public class MainActivity extends AppCompatActivity {
             return convertView;
         }
 
+
         class ViewHolder {
-            LinearLayout linearLayout;
-            TextView num;
+            TextView meetingName;
             TextView time;
-            TextView adress;
+            TextView peopleTitle ;
             TextView name;
             TextView people;
             View item_ly;
             ImageView image;
         }
-
+        //改变日期格式(将日期2015-10-11改为2015/10/11格式)
+        private String changeDateStyle(MeetInfo meetInfo){
+            String s=meetInfo.getDay();
+            String[] meetInfoDay=s.split("-");
+            String newDate="";
+            for (int i=0;i<meetInfoDay.length;i++){
+                newDate=newDate+meetInfoDay[i]+"/";
+            }
+           // newDate=newDate.substring(0,newDate.length()-1);
+            return newDate;
+        }
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
